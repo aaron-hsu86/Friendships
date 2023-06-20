@@ -53,3 +53,14 @@ class Users:
         query = f'DELETE FROM {cls.tables} WHERE id = %(id)s;'
         data = {'id' : id}
         return connectToMySQL(cls.DB).query_db(query, data)
+    
+    @staticmethod
+    def valid_user_check(cls, form):
+        is_valid = True
+        if len(form['first_name']) < 3:
+            flash('First Name must be at least 3 characters')
+            is_valid = False
+        if len(form['last_name']) < 3:
+            flash('Last Name must be at least 3 characters')
+            is_valid = False
+        return is_valid

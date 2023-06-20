@@ -75,14 +75,29 @@ class Friendships:
         return friendships
         
     @classmethod
-    def check_relationships(cls, id):
+    def check_relationships(cls, form):
         query = 'SELECT friend_id FROM friendships WHERE user_id = %(id)s;'
-        data = {'id' : id}
+        user_id = form['user_id']
+        friend_id = int(form['friend_id'])
+        data = {'id' : user_id}
         results = connectToMySQL(cls.DB).query_db(query, data)
         friends = []
         if results:
             for friend in results:
                 friends.append(friend['friend_id'])
-        return friends
+        not_friends = True
+        for friend in friends:
+            if friend_id == friend:
+                not_friends = False
+        return not_friends
 
-    
+    @staticmethod
+    def relationship_form_check(form):
+        is_valid = True
+        if "user_id" not in form:
+            flash('Please select a user')
+            is_valid = False
+        if 'friend_id' not in form:
+            flash('Please select a friend')
+            is_valid = False
+        return is_valid
