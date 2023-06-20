@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friendships</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+<style>
+    #submit-button-container {
+        width: 60%;
+    }
+    .error-msg {
+        background-color: pink;
+        border-style: solid;
+        color: brown;
+    }
+</style>
+<body class="bg-black text-light">
+    <div class="d-flex justify-content-evenly p-5">
+        <div>
+            <h1>Friendships</h1>
+            <table class="table table-primary table-striped">
+                <thead>
+                    <tr class="table-secondary">
+                        <th scope="col">User</th>
+                        <th scope="col">Friend</th>
+                        <th scope="col">Delete?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for friends in friendships: %}
+                    <tr class="table-secondary">
+                        <td>{{friends.user_first_name}} {{friends.user_last_name}}</td>
+                        <td>{{friends.friend_first_name}} {{friends.friend_last_name}}</td>
+                        <td><a href="/delete_friendship/{{friends.id}}">Delete?</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="d-flex flex-column gap-4">
+            <div id="add_user">
+                <h1>Add User</h1>
+                <form action="/add_user" method="post" class="d-flex flex-column gap-3">
+                    <div class="d-flex justify-content-between gap-5">
+                        <label for="first_name">First Name:</label>
+                        <input type="text" name="first_name">
+                    </div>
+                    <div class="d-flex justify-content-between gap-5">
+                        <label for="last_name">Last Name:</label>
+                        <input type="text" name="last_name">
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <input type="submit" name="Add User">
+                    </div>
+                </form>
+            </div>
+            <div id="create_friendship">
+                <h1>Create Friendship</h1>
+                <form action="/create_friendship" method="post" class="d-flex flex-column gap-3">
+                    <div class="d-flex justify-content-between gap-5">
+                        <label for="user_id">User:</label>
+                        <select name="user_id">
+                            <option value="null" disabled selected>---Select User---</option>
+                            {% for user in users: %}
+                                <option value="{{user.id}}">{{user.first_name}} {{user.last_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between gap-5">
+                        <label for="friend">Friend:</label>
+                        <select name="friend_id">
+                            <option value="null" disabled selected>---Select Friend---</option>
+                            {% for friend in friends: %}
+                                <option value="{{friend.id}}">{{friend.first_name}} {{friend.last_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <input type="submit" name="Create">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="container col-2 error-msg p-3">
+        {% for message in messages %}
+            <p>{{message}}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+</html>
